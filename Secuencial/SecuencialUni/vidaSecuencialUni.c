@@ -9,7 +9,10 @@
  ********************************************
  ********************************************/
 
-#include "funcionesSecuencial.h"
+#include "funcionesSecuencial_int.h"
+#include "funcionesSecuencial_float.h"
+#include "funcionesSecuencial_long.h"
+#include "funcionesSecuencial_double.h"
 
 /*
  *Función principal que rige el flujo del programa 
@@ -17,45 +20,14 @@
 
 int main(int argc, char const *argv[])
 {
-	short int *malla, *aux;
-	short int N = TAMANIO;
-
-	FILE * archivo = fopen("../../mat1000.txt", "r");
-	if (archivo==NULL) {fputs ("File error",stderr); exit (1);}
-
-	char caracterAuxiliar;
-	malla = (short int *) malloc(N*N*sizeof(short int *));
-	aux = (short int *) malloc(N*N*sizeof(short int *));
-	
-	for(int i=0;i<N;i++){
-		for(int j=0;j<N;j++){
-			caracterAuxiliar = fgetc(archivo);
-			if (caracterAuxiliar == '1'){
-				aux[i*N+j]=malla[i*N+j]=1;
-			}
-			else if(caracterAuxiliar == '0'){
-				aux[i*N+j]=malla[i*N+j]=0;
-			}
-		}
-	}
-
-/*
- * Repite el proceso el mismo número de veces.
- *  
- */
-	for (int i = 0; i < ITERACIONES; ++i)
-	{
-		printf("Iteracion %d\n",i+1);
-		actualiza(malla,aux,N);
-		imprimeM(malla,N);
-
-	}
-/*
- * Libera la memoria y cierra el canal con el archivo. 
- */	
-	free(malla);
-	free(aux);
-	fclose(archivo);
+	printf("Inicia el programa con el tipo INT\n");
+	GOL_int();
+	printf("Termina el tipo INT e inicia FLOAT\n");
+	GOL_float();
+	printf("Termina el tipo FLOAT e inicia LONG\n");
+	GOL_long();
+	printf("Termina el tipo LONG e inicia DOUBLE\n");
+	GOL_double();
 	return 0;
 }
 
