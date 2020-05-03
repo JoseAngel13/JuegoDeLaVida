@@ -5,6 +5,7 @@ void GOL_long()
 
 	long *malla, *aux;
 	int N = TAMANIO;
+	clock_t  inicio, final;
 
 	malla = (long *)malloc(N * N * sizeof(long *));
 	aux = (long *)malloc(N * N * sizeof(long *));
@@ -13,13 +14,17 @@ void GOL_long()
 	 *  
  	*/
  	leeM_long(malla,aux);
+	//imprimeM_long(malla, N);
 	//AQUI INICIAMOS A CONTAR EL TIEMPO
+	inicio=clock();
 	for (int i = 0; i < ITERACIONES; ++i)
 	{
 		actualiza_long(malla, aux, N);
-		printf("Iteracion %d\n", i + 1);
-		imprimeM_long(malla, N);
+		//printf("Iteracion %d\n", i + 1);
+		//imprimeM_long(malla, N);
 	}
+	final = clock();
+	printf("Tiempo transcurrido con variable LONG: %f [s]\n", ((double)final - inicio) / CLOCKS_PER_SEC);
 	/*
  * Libera la memoria y cierra el canal con el archivo. 
  */
@@ -29,7 +34,7 @@ void GOL_long()
 
 void leeM_long(long *malla, long *aux)
 {
-	FILE *archivo = fopen("../../mat1000.txt", "r");
+	FILE *archivo = fopen(DIR_FILE, "r");
 	if (archivo == NULL)
 	{
 		fputs("File error", stderr);

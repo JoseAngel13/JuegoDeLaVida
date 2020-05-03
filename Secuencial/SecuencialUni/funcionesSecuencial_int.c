@@ -5,6 +5,7 @@ void GOL_int()
 
 	int *malla, *aux;
 	int N = TAMANIO;
+	clock_t  inicio, final;
 
 	malla = (int *)malloc(N * N * sizeof(int *));
 	aux = (int *)malloc(N * N * sizeof(int *));
@@ -12,14 +13,18 @@ void GOL_int()
 	 * Repite el proceso el mismo número de veces.
 	 *  
  	*/
- 	leeM_int(malla,aux);
+	leeM_int(malla, aux);
+	//imprimeM_int(malla, N);
 	//AQUI INICIAMOS A CONTAR EL TIEMPO
+	inicio = clock();
 	for (int i = 0; i < ITERACIONES; ++i)
 	{
 		actualiza_int(malla, aux, N);
-		printf("Iteracion %d\n", i + 1);
-		imprimeM_int(malla, N);
+		//printf("Iteracion %d\n", i + 1);
+		//imprimeM_int(malla, N);
 	}
+	final = clock();
+	printf("Tiempo transcurrido con variable INT: %f [s]\n", ((double)final - inicio) / CLOCKS_PER_SEC);
 	/*
  * Libera la memoria y cierra el canal con el archivo. 
  */
@@ -29,7 +34,7 @@ void GOL_int()
 
 void leeM_int(int *malla, int *aux)
 {
-	FILE *archivo = fopen("../../mat1000.txt", "r");
+	FILE *archivo = fopen(DIR_FILE, "r");
 	if (archivo == NULL)
 	{
 		fputs("File error", stderr);
@@ -59,7 +64,7 @@ void leeM_int(int *malla, int *aux)
  * Funcion para imprimir la matriz 
  * Como entradas son la malla y el tamaño
  */
-void imprimeM_int(int *m,int N)
+void imprimeM_int(int *m, int N)
 {
 	for (int i = 0; i < N; ++i)
 	{

@@ -5,6 +5,7 @@ void GOL_double()
 
 	double *malla, *aux;
 	int N = TAMANIO;
+	clock_t  inicio, final;
 
 	malla = (double *)malloc(N * N * sizeof(double *));
 	aux = (double *)malloc(N * N * sizeof(double *));
@@ -12,24 +13,28 @@ void GOL_double()
 	 * Repite el proceso el mismo número de veces.
 	 *  
  	*/
- 	leeM_double(malla,aux);
+	leeM_double(malla, aux);
+	//imprimeM_double(malla, N);
 	//AQUI INICIAMOS A CONTAR EL TIEMPO
+	inicio=clock();
 	for (int i = 0; i < ITERACIONES; ++i)
 	{
 		actualiza_double(malla, aux, N);
-		printf("Iteracion %d\n", i + 1);
-		imprimeM_double(malla, N);
+		//printf("Iteracion %d\n", i + 1);
+		//imprimeM_double(malla, N);
 	}
+	final = clock();
+	printf("Tiempo transcurrido con variable DOUBLE: %f [s]\n", ((double)final - inicio) / CLOCKS_PER_SEC);
 	/*
- * Libera la memoria y cierra el canal con el archivo. 
- */
+ 	* Libera la memoria y cierra el canal con el archivo. 
+ 	*/
 	free(malla);
 	free(aux);
 }
 
 void leeM_double(double *malla, double *aux)
 {
-	FILE *archivo = fopen("../../mat1000.txt", "r");
+	FILE *archivo = fopen(DIR_FILE, "r");
 	if (archivo == NULL)
 	{
 		fputs("File error", stderr);
@@ -59,19 +64,20 @@ void leeM_double(double *malla, double *aux)
  * Funcion para imprimir la matriz 
  * Como entradas son la malla y el tamaño
  */
-void imprimeM_double(double *m,int N)
+void imprimeM_double(double *m, int N)
 {
 	for (int i = 0; i < N; ++i)
 	{
 		for (int j = 0; j < N; ++j)
 		{
+			//printf("%.1f ",m[i * N + j]);
 			if (m[i * N + j] == 1)
 			{
-				printf("%f ",m[i * N + j]);
+				printf("* ");
 			}
 			else
 			{
-				printf("%f ",m[i * N + j]);
+				printf("- ");
 			}
 		}
 		printf("\n");

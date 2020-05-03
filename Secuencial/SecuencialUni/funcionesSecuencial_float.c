@@ -2,9 +2,9 @@
 
 void GOL_float()
 {
-
 	float *malla, *aux;
 	int N = TAMANIO;
+	unsigned inicio, final;
 
 	malla = (float *)malloc(N * N * sizeof(float *));
 	aux = (float *)malloc(N * N * sizeof(float *));
@@ -12,14 +12,18 @@ void GOL_float()
 	 * Repite el proceso el mismo número de veces.
 	 *  
  	*/
- 	leeM_float(malla,aux);
+	leeM_float(malla, aux);
+	//imprimeM_float(malla, N);
 	//AQUI INICIAMOS A CONTAR EL TIEMPO
+	inicio=clock();
 	for (int i = 0; i < ITERACIONES; ++i)
 	{
 		actualiza_float(malla, aux, N);
-		printf("Iteracion %d\n", i + 1);
-		imprimeM_float(malla, N);
+		//printf("Iteracion %d\n", i + 1);
+		//imprimeM_float(malla, N);
 	}
+	final = clock();
+	printf("Tiempo transcurrido con variable FLOAT: %f [s]\n", ((double)final - inicio) / CLOCKS_PER_SEC);
 	/*
  * Libera la memoria y cierra el canal con el archivo. 
  */
@@ -29,7 +33,7 @@ void GOL_float()
 
 void leeM_float(float *malla, float *aux)
 {
-	FILE *archivo = fopen("../../mat1000.txt", "r");
+	FILE *archivo = fopen(DIR_FILE, "r");
 	if (archivo == NULL)
 	{
 		fputs("File error", stderr);
@@ -44,11 +48,11 @@ void leeM_float(float *malla, float *aux)
 			caracterAuxiliar = fgetc(archivo);
 			if (caracterAuxiliar == '1')
 			{
-				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 1;
+				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 1.0;
 			}
 			else if (caracterAuxiliar == '0')
 			{
-				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 0;
+				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 0.0;
 			}
 		}
 	}
@@ -59,7 +63,7 @@ void leeM_float(float *malla, float *aux)
  * Funcion para imprimir la matriz 
  * Como entradas son la malla y el tamaño
  */
-void imprimeM_float(float *m,int N)
+void imprimeM_float(float *m, int N)
 {
 	for (int i = 0; i < N; ++i)
 	{
@@ -93,62 +97,62 @@ void actualiza_float(float *malla, float *aux, int N)
 			celActual = i * N + j;
 
 			//Izquierda Arriba
-			if (i > 0 && j > 0 && malla[celActual - N - 1] == 1)
+			if (i > 0 && j > 0 && malla[celActual - N - 1] == 1.0)
 			{
 				contador++;
 			}
 			//Arriba
-			if (i > 0 && malla[celActual - N] == 1)
+			if (i > 0 && malla[celActual - N] == 1.0)
 			{
 				contador++;
 			}
 			//Arriba derecha
-			if (i > 0 && j < N - 1 && malla[celActual + 1 - N] == 1)
+			if (i > 0 && j < N - 1 && malla[celActual + 1 - N] == 1.0)
 			{
 				contador++;
 			}
 			//Izquierda
-			if (j > 0 && malla[celActual - 1] == 1)
+			if (j > 0 && malla[celActual - 1] == 1.0)
 			{
 				contador++;
 			}
 			//Derecha
-			if (j < N - 1 && malla[celActual + 1] == 1)
+			if (j < N - 1 && malla[celActual + 1] == 1.0)
 			{
 				contador++;
 			}
 			//Abajo izquierda
-			if (i < N - 1 && j > 0 && malla[celActual + N - 1] == 1)
+			if (i < N - 1 && j > 0 && malla[celActual + N - 1] == 1.0)
 			{
 				contador++;
 			}
 			//Abajo
-			if (i < N - 1 && malla[celActual + N] == 1)
+			if (i < N - 1 && malla[celActual + N] == 1.0)
 			{
 				contador++;
 			}
 			//Abajo derecha
-			if (i < N - 1 && j < N - 1 && malla[celActual + 1 + N] == 1)
+			if (i < N - 1 && j < N - 1 && malla[celActual + 1 + N] == 1.0)
 			{
 				contador++;
 			}
 
-			if (malla[celActual] == 1)
+			if (malla[celActual] == 1.0)
 			{ //Actuamos sobre las celulas en la copia de la matriz
 				if (contador == 2 || contador == 3)
 				{ //La celulas vivas con 2 o 3 celulas vivas pegadas, se mantiene vivas.
-					aux[celActual] = 1;
+					aux[celActual] = 1.0;
 				}
 				else
 				{ //Si no se cumple la condicion, mueren.
-					aux[celActual] = 0;
+					aux[celActual] = 0.0;
 				}
 			}
 			else
 			{
 				if (contador == 3)
 				{ //Las celulas muertas con 3 celulas vivas pegadas, resucitan.
-					aux[celActual] = 1;
+					aux[celActual] = 1.0;
 				}
 			}
 			contador = 0;

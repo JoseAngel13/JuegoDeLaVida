@@ -20,14 +20,28 @@
 
 int main(int argc, char const *argv[])
 {
+	
+
 	printf("Inicia el programa con el tipo INT\n");
 	GOL_int();
-	printf("Termina el tipo INT e inicia FLOAT\n");
-	GOL_float();
-	printf("Termina el tipo FLOAT e inicia LONG\n");
+
+	printf("Inicia el programa con el tipo LONG\n");
 	GOL_long();
-	printf("Termina el tipo LONG e inicia DOUBLE\n");
-	GOL_double();
+
+	printf("Inicia el programa con el tipo FLOAT\n");
+	GOL_float();
+
+	//printf("Inicia el programa con el tipo DUBLE\n");
+	//GOL_double();
+
+	printf("Finaliza\n");
+
+
+	
+
+	
+
+	
 	return 0;
 }
 
