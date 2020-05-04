@@ -20,28 +20,43 @@
 
 int main(int argc, char const *argv[])
 {
-	
+	int tamanio = 10;
+	double  res;
+	FILE *resultados = fopen("resultados.txt", "w");
+	if(resultados == NULL ) {
+    	printf("No fue posible abrir el archivo\n");
+    	return -1;
+	}
 
-	printf("Inicia el programa con el tipo INT\n");
-	GOL_int();
+	fprintf (resultados, "Ejecucion nueva \n");
+	fprintf(resultados, "TAM\tINT\tLONG\tFLOAT\tDOUBLE\n");
 
-	printf("Inicia el programa con el tipo LONG\n");
-	GOL_long();
 
-	printf("Inicia el programa con el tipo FLOAT\n");
-	GOL_float();
+	for (tamanio = 100; tamanio < 5000; tamanio = tamanio+100)
+	{
+		fprintf(resultados, "%d\t",tamanio);
 
-	//printf("Inicia el programa con el tipo DUBLE\n");
-	//GOL_double();
+		//printf("Inicia el programa con el tipo INT\n");
+		res = GOL_int(tamanio);
+		fprintf ( resultados, "%f\t",res);
+
+		//printf("Inicia el programa con el tipo LONG\n");
+		res = GOL_long(tamanio);
+		fprintf ( resultados, "%f\t",res);
+
+		//printf("Inicia el programa con el tipo FLOAT\n");
+		res = GOL_float(tamanio);
+		fprintf ( resultados, "%f\t",res);
+
+		//printf("Inicia el programa con el tipo DUBLE\n");
+		res = GOL_double(tamanio);
+		fprintf ( resultados, "%f\t",res);
+		fprintf ( resultados, "\n");
+	}
+
 
 	printf("Finaliza\n");
-
-
-	
-
-	
-
-	
+	fclose(resultados);
 	return 0;
 }
 

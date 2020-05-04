@@ -1,10 +1,10 @@
 #include "funcionesSecuencial_int.h"
 
-void GOL_int()
+double GOL_int(int tamanio)
 {
 
 	int *malla, *aux;
-	int N = TAMANIO;
+	int N = tamanio;
 	clock_t  inicio, final;
 
 	malla = (int *)malloc(N * N * sizeof(int *));
@@ -13,7 +13,7 @@ void GOL_int()
 	 * Repite el proceso el mismo número de veces.
 	 *  
  	*/
-	leeM_int(malla, aux);
+	leeM_int(malla, aux,tamanio);
 	//imprimeM_int(malla, N);
 	//AQUI INICIAMOS A CONTAR EL TIEMPO
 	inicio = clock();
@@ -24,15 +24,17 @@ void GOL_int()
 		//imprimeM_int(malla, N);
 	}
 	final = clock();
-	printf("Tiempo transcurrido con variable INT: %f [s]\n", ((double)final - inicio) / CLOCKS_PER_SEC);
+	double tiempo = ((double)final - inicio) / CLOCKS_PER_SEC;
+	//printf("Tiempo transcurrido con variable INT: %f [s]\n", tiempo);
 	/*
  * Libera la memoria y cierra el canal con el archivo. 
  */
 	free(malla);
 	free(aux);
+	return tiempo;
 }
 
-void leeM_int(int *malla, int *aux)
+void leeM_int(int *malla, int *aux, int tamanio)
 {
 	FILE *archivo = fopen(DIR_FILE, "r");
 	if (archivo == NULL)
@@ -42,18 +44,18 @@ void leeM_int(int *malla, int *aux)
 	}
 
 	char caracterAuxiliar;
-	for (int i = 0; i < TAMANIO; i++)
+	for (int i = 0; i < tamanio; i++)
 	{
-		for (int j = 0; j < TAMANIO; j++)
+		for (int j = 0; j < tamanio; j++)
 		{
 			caracterAuxiliar = fgetc(archivo);
 			if (caracterAuxiliar == '1')
 			{
-				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 1;
+				aux[i * tamanio + j] = malla[i * tamanio + j] = 1;
 			}
 			else if (caracterAuxiliar == '0')
 			{
-				aux[i * TAMANIO + j] = malla[i * TAMANIO + j] = 0;
+				aux[i * tamanio + j] = malla[i * tamanio + j] = 0;
 			}
 		}
 	}

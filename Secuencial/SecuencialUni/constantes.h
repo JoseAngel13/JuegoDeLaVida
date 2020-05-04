@@ -11,5 +11,4 @@
 #endif
 //CONSTANTES
 #define ITERACIONES 100 //Número de veces que se hara el proceso
-#define TAMANIO 5000     //Este número se eleva al cuadrado ya que son mallas cuadras
 #define DIR_FILE "../../mat5000.txt"

@@ -1,7 +1,6 @@
 #include "constantes.h"
 
-void GOL_double();
+double GOL_double(int tamanio);
 void imprimeM_double(double *m, int N);
 void actualiza_double(double *malla, double *aux, int N);
-void leeM_double(double *malla, double *aux);
-
+void leeM_double(double *malla, double *aux, int tamanio);
