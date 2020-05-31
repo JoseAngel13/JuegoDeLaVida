@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<time.h>
+#include <time.h>
 #include <windows.h>
-#define N 32           //Tamaño del tablero potencias de 2 a partir de 16 
+#define N 10000           //Tamaño del tablero potencias de 2 a partir de 16 
 #define BLOCK_SIZE 16	
-#define ITERACIONES 100	//numero de cambios totales del autómata
+#define ITERACIONES 300	//numero de cambios totales del autómata
 
 
 /*
@@ -18,7 +18,7 @@ __global__ void actualiza(int *malla, int *aux){
     int j = blockDim.y * blockIdx.y + threadIdx.y; //Columna
 	if (i < N && j < N) {
 	celActual = i*N+j;
-
+	//printf("%d ",celActual);
 	//Izquierda Arriba
 	if(i>0 && j>0 && malla[celActual-N-1]==1){
 		contador++;
@@ -66,8 +66,18 @@ __global__ void actualiza(int *malla, int *aux){
 			}
 		}
 	contador=0;
-	
-	malla[celActual] = aux[celActual];//Copiamos la matriz origen en destino
+	}
+
+
+}
+
+__global__ void copiaMatriz(int *malla, int *aux){
+	int celActual;
+	int i = blockDim.x * blockIdx.x +  threadIdx.x; //fila
+    int j = blockDim.y * blockIdx.y + threadIdx.y; //Columna
+	if (i < N && j < N) {
+		celActual = i*N+j;
+		aux[celActual] = malla[celActual];
 	}
 }
 
@@ -77,6 +87,7 @@ __global__ void actualiza(int *malla, int *aux){
  * Como entradas son la malla y el tamaño
  */
 __global__ void imprimeM(int *m){
+//void imprimeM(int *m){
 	for (int i = 0; i < N; ++i)
 	{
 		for (int j = 0; j < N; ++j)
@@ -93,17 +104,13 @@ __global__ void imprimeM(int *m){
 	}
 }
 
-/*  buscar esta funcion para llenar las matricesde forma aleatoria
-    arc4random(); 
-    arc4random solo se puede usar en C con un compilador anterior a c99
-*/
-
 
 int main() {
     //Cambiar tipos de datos
     //int float double long
     int *tablero, *tablero_aux;
-    int *d_tablero, *d_tablero_aux;
+	int *d_tablero, *d_tablero_aux;
+	clock_t  inicio, final;
     size_t size = N*N * sizeof(int);
 
     //Asignacion de memoria del lado del host
@@ -114,17 +121,8 @@ int main() {
     //Asignacion de memoria del lado de device
     cudaMalloc(&d_tablero, size);
     cudaMalloc(&d_tablero_aux, size);
-
-    //Llenado de las matrices en forma secuencial
-    //srand ((int)time(NULL));
 	
-	/*for(int i=0; i<N*N;i++)
-    {   
-		tablero_aux[i] = tablero[i] = (float)(rand()%2);
-        //printf("%ld %ld\n",tablero[i],tablero_aux[i]);
-	}*/
-	
-	FILE * archivo = fopen("../mat1000.txt", "r");
+	FILE * archivo = fopen("../mat5000.txt", "r");
 	if (archivo==NULL) {fputs ("File error",stderr); exit (1);}
 
 	char caracterAuxiliar;
@@ -143,9 +141,7 @@ int main() {
 
 	fclose(archivo);
     
-	//imprimeM(tablero);
 	printf("\n");
-	//imprimeM(tablero_aux);
 
 
     cudaMemcpy(d_tablero,tablero,size,cudaMemcpyHostToDevice);
@@ -155,25 +151,28 @@ int main() {
     //VOLVER CONSTANTE
     dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
     dim3 dimGrid((N + dimBlock.x-1)/dimBlock.x, (N+dimBlock.y-1)/dimBlock.y);
-
-    //actualiza<<<dimGrid,dimBlock>>>(d_tablero,d_tablero_aux);
-    //cudaThreadSynchronize();//espera a que todos los hilos terminen su ejecución
     
     /*
     * Repite el proceso el mismo número de veces.
     *  
     */
 	//tiempo inicial
+	inicio = clock();
+	//imprimeM<<<1,1>>>(d_tablero);
+	cudaThreadSynchronize();
 	for (int i = 0; i < ITERACIONES; ++i)
 	{
-	 	printf("Iteracion %d\n",i+1);
-
+	 	//printf("Iteracion %d\n",i+1);
 		actualiza<<<dimGrid,dimBlock>>>(d_tablero,d_tablero_aux);
 		cudaThreadSynchronize();//espera a que todos los hilos terminen su ejecución
-		//cudaMemcpy(tablero,d_tablero,size,cudaMemcpyDeviceToHost);
-		imprimeM<<<1,1>>>(d_tablero);
+		copiaMatriz<<<dimGrid,dimBlock>>>(d_tablero_aux,d_tablero);
+		cudaThreadSynchronize();
+		//imprimeM<<<1,1>>>(d_tablero);
+		//cudaThreadSynchronize();
 	}
-    //cudaMemcpy(resultado,d_resultado,size,cudaMemcpyDeviceToHost);
+	final = clock();
+	double tiempo = ((double)final - inicio) / CLOCKS_PER_SEC;
+	printf("el tiempo final es %f", tiempo);
 	//timepo final
 
     free(tablero);
@@ -183,5 +182,4 @@ int main() {
     cudaFree(d_tablero_aux);
 
     return 0;
-
 }

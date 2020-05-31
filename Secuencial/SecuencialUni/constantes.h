@@ -10,5 +10,6 @@
 #include <unistd.h>
 #endif
 //CONSTANTES
-#define ITERACIONES 100 //Número de veces que se hara el proceso
+#define ITERACIONES 30 //Número de veces que se hara el proceso
+//1000 y 10000
 #define DIR_FILE "../../mat5000.txt"
